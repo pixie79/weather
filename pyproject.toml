@@ -2,9 +2,7 @@
 name = "environw"
 description = "Environ Weather proxy"
 version = "0.1.1"
-authors = [
-  "Mark Olliver <mark@olliver.me.uk>"
-]
+authors = ["Mark Olliver <mark@olliver.me.uk>"]
 license = "MIT"
 readme = "README.md"
 packages = [{ include = "environw_proxy", from = "src" }]
@@ -12,6 +10,7 @@ packages = [{ include = "environw_proxy", from = "src" }]
 [tool.poetry.dependencies]
 python = "^3.11"
 aws-lambda-powertools = { extras = ["tracer"], version = "^2.32.0" }
+requests = "^2.31.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.1.14"

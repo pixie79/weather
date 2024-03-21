@@ -1,8 +1,12 @@
 # terraform
-.terraform
+terraform/.terraform
+terraform/.terraform.lock.hcl
 build.plan
+.terraform
 .terraform.lock.hcl
 errored.tfstate
+lambda_handler.zip
+tfplan
 
 node_modules/
 # Byte-compiled / optimized / DLL files
@@ -32,6 +36,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+package/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

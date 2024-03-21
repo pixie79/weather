@@ -1,0 +1,41 @@
+version: 3
+
+vars:
+  LAMBDA_SCRIPT: |
+    env && \
+    yum update && \
+    yum install -y python3.11 python3.11-pip zip && \
+    pip3.11 install poetry && \
+    poetry build && \
+    poetry export -f requirements.txt --output requirements.txt --without-hashes && \
+    poetry run pip install -r requirements.txt --upgrade --only-binary :all: --platform manylinux2014_x86_64 --target package dist/*.whl && \
+    cd package && \
+    mkdir -p out 
+    zip -r -q out/my-lambda.zip . -x '*.pyc' out
+
+tasks:
+  package_python:
+    cmds:
+      - docker run -v ${PWD}:/mnt/build -w /mnt/build -e PIP_EXTRA_INDEX_URL=${PIP_EXTRA_INDEX_URL}
+        -e PIP_INDEX_URL=${PIP_INDEX_URL} amazonlinux:2023 /bin/bash -c "{{.LAMBDA_SCRIPT}}"
+
+  terraform_fmt:
+    cmds:
+      - terraform -chdir=terraform fmt
+
+  terraform_init:
+    cmds:
+      - terraform -chdir=terraform init
+
+  terraform_plan:
+    cmds:
+      - terraform -chdir=terraform plan -out=tfplan -var="windy_api_key=${WINDY_API_KEY}"
+        -var="log_level=${LOG_LEVEL}"
+
+  terraform_apply:
+    cmds:
+      - terraform -chdir=terraform apply -auto-approve tfplan
+
+  clean:
+    cmds:
+      - sudo rm -rf package dist requirements.txt
