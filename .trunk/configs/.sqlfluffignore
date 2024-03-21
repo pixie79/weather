@@ -1,0 +1,9 @@
+terraform/
+airflow_packaging/
+.*/
+node_modules/
+schemas/
+dbt-project/target/
+dbt-project/dbt_packages/
+dbt-project/macros/
+dbt-project/tests/

@@ -1,0 +1,60 @@
+[sqlfluff]
+templater = dbt
+dialect = athena
+# This change (from jinja to dbt templater) will make linting slower
+# because linting will first compile dbt code into data warehouse code.
+runaway_limit = 10
+max_line_length = 100
+indent_unit = space
+
+exclude_rules = AL05, LT01, ST06, ST07, RF01, RF02, RF04, RF03
+#, RF01, RF02, RF03, RF04, RF05, LT02, LT05
+# AL05 = (alias t never used in statement) https://docs.aws.amazon.com/athena/latest/ug/flattening-arrays.html
+# LT01 = Line ending, already catered for by precommit hook
+# ST06 = Select wildcards then simple targets before calculations and aggregates.
+# ST07 = Found USING statement. Expecting only ON statements. (enforcing this introduces amniguity in existing products)
+# RF01 = Works on compiled targets, issue with dbt templates
+# RF02 = References are not being picked up by templater properly
+# RF03 = Select which is inconsistent with previous references.
+# RF04 = Keywords must not be used, already heavily integrated in models
+# TODO: ST06 is a good rule, but may interfere with existing data products, create separate item to test and confirm there is no impact
+# TODO: Upgrade sqlfluff after dbt upgrades are done, templater may have improved allowing some of the above rules to be included again
+
+[sqlfluff:indentation]
+tab_space_size = 4
+
+[sqlfluff:layout:type:comma]
+spacing_before = touch
+line_position = trailing
+
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = lower
+
+[sqlfluff:rules:aliasing.table]
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.expression]
+allow_scalar = False
+
+[sqlfluff:rules:capitalisation.identifiers]
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.functions]
+capitalisation_policy = lower
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = lower
+
+[sqlfluff:rules:ambiguous.column_references]  # Number in group by
+group_by_and_order_by_style = implicit
+
+[sqlfluff:templater:jinja]
+apply_dbt_builtins = True
+load_macros_from_path=macros
+
+[sqlfluff:templater:dbt]
+project_dir = ./dbt-project/
+target = refined
