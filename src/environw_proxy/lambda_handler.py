@@ -5,6 +5,7 @@ This module defines a Lambda function for handling S3 event triggers.
 It utilizes utilities from aws_lambda_powertools and a custom process_records function.
 """
 
+import json
 from aws_lambda_powertools import Logger, Tracer  # trunk-ignore(pyright/reportMissingImports)
 from aws_lambda_powertools.utilities.data_classes import (  # trunk-ignore(pyright/reportMissingImports)
     APIGatewayProxyEvent,
@@ -23,7 +24,7 @@ logger: Logger = Logger(service="weather-proxy", utc=True, child=False)
 @logger.inject_lambda_context(log_event=True)
 @tracer.capture_lambda_handler
 @event_source(data_class=APIGatewayProxyEvent)
-def handler(event: APIGatewayProxyEvent, context: LambdaContext) -> bool: # trunk-ignore(pylint/W0613)
+def handler(event: APIGatewayProxyEvent, context: LambdaContext) -> dict: # trunk-ignore(pylint/W0613)
     """Handle an incoming API Gw event by processing records.
 
     Args:
@@ -37,5 +38,21 @@ def handler(event: APIGatewayProxyEvent, context: LambdaContext) -> bool: # trun
         result_windy =  process_windy_records(event=event.json_body)
         result_wunderground = post_records_wunderground(event=event.json_body)
         if result_windy and result_wunderground:
-            return True
-    return False
+            return {
+                'statusCode': 200,  # HTTP 200 OK
+                'headers': {
+                    'Content-Type': 'application/json'
+                },
+                'body': json.dumps({
+                    'message': 'POST request processed successfully'
+                })
+            }
+    return {
+        'statusCode': 400,
+        'headers': {
+            'Content-Type': 'application/json'
+        },
+        'body': json.dumps({
+            'message': 'POST Processing failed'
+        })
+    }
