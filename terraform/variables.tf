@@ -13,3 +13,23 @@ variable "windy_api_key" {
   description = "value of windy token"
   sensitive   = true
 }
+
+variable "wunderground_station_id_0" {
+  type        = string
+  description = "value of wunderground station id 0"
+}
+
+variable "wunderground_station_id_1" {
+  type        = string
+  description = "value of wunderground station id 1"
+}
+
+variable "wunderground_station_key_0" {
+  type        = string
+  description = "value of wunderground station key 0"
+}
+
+variable "wunderground_station_key_1" {
+  type        = string
+  description = "value of wunderground station key 1"
+}

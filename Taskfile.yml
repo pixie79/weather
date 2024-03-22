@@ -30,6 +30,9 @@ tasks:
   terraform_plan:
     cmds:
       - terraform -chdir=terraform plan -out=tfplan -var="windy_api_key=${WINDY_API_KEY}"
+        -var="wunderground_station_id_0=${WUNDERGROUND_STATION_ID_0}"
+        -var="wunderground_station_id_1=${WUNDERGROUND_STATION_ID_1}"
+        -var="wunderground_station_key_0=${WUNDERGROUND_STATION_KEY_0}"  -var="wunderground_station_key_1=${WUNDERGROUND_STATION_KEY_1}"
         -var="log_level=${LOG_LEVEL}"
 
   terraform_apply:

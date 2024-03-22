@@ -14,9 +14,13 @@ resource "aws_lambda_function" "weather_lambda" {
   reserved_concurrent_executions = 2
   environment { # trunk-ignore(semgrep/terraform.aws.security.aws-lambda-environment-unencrypted.aws-lambda-environment-unencrypted)
     variables = {
-      WINDY_API_KEY = var.windy_api_key
-      LOG_LEVEL     = var.log_level
-      POWERTOOLS_LOG_LEVEL : var.log_level
+      WINDY_API_KEY              = var.windy_api_key
+      LOG_LEVEL                  = var.log_level
+      POWERTOOLS_LOG_LEVEL       = var.log_level
+      WUNDERGROUND_STATION_ID_0  = var.wunderground_station_id_0
+      WUNDERGROUND_STATION_ID_1  = var.wunderground_station_id_1
+      WUNDERGROUND_STATION_KEY_0 = var.wunderground_station_key_0
+      WUNDERGROUND_STATION_KEY_1 = var.wunderground_station_key_1
     }
   }
 

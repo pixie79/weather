@@ -14,7 +14,7 @@ from aws_lambda_powertools.utilities.data_classes import (  # trunk-ignore(pyrig
 # trunk-ignore(pyright/reportMissingImports)
 from aws_lambda_powertools.utilities.typing import LambdaContext
 
-from environw_proxy.process import process_records
+from environw_proxy.process import post_records_wunderground, process_windy_records
 
 tracer: Tracer = Tracer(service="weather-proxy")
 logger: Logger = Logger(service="weather-proxy", utc=True, child=False)
@@ -34,6 +34,8 @@ def handler(event: APIGatewayProxyEvent, context: LambdaContext) -> bool: # trun
         bool: True if the process completes successfully.
     """
     if 'weather' in event.path and event.http_method == 'POST':
-        return process_records(event=event.json_body)
-
+        result_windy =  process_windy_records(event=event.json_body)
+        result_wunderground = post_records_wunderground(event=event.json_body)
+        if result_windy and result_wunderground:
+            return True
     return False
