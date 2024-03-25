@@ -10,6 +10,11 @@ provider "aws" {
 
 terraform {
   required_version = "1.7.4"
+  backend "s3" {
+    bucket = "pixie79-terraform"
+    key    = "weather.tfstate"
+    region = "eu-west-2"
+  }
   required_providers {
     local = {
       source  = "hashicorp/local"
